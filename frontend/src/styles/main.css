@@ -1,0 +1,149 @@
+/**
+ * 全局样式。
+ *
+ * 【设计原则】
+ * 只放三类内容：
+ *   1. 浏览器默认样式重置
+ *   2. 全站通用的排版与工具类
+ *   3. Element Plus 的少量主题微调
+ * 页面专属样式一律写在各自组件的 <style scoped> 里，
+ * 避免这个文件膨胀成难以维护的"样式垃圾场"。
+ */
+
+/* ---------------------------------------------------------------------------
+   1. 重置
+   --------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', Arial, sans-serif;
+  font-size: 14px;
+  color: #303133;
+  background-color: #f5f7fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 应用挂载后移除首屏加载占位（index.html 里的 #app-loading） */
+
+/* ---------------------------------------------------------------------------
+   2. 滚动条美化（Webkit 内核）
+   --------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c4cc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #909399;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   3. 通用工具类
+   --------------------------------------------------------------------------- */
+/** 页面容器：统一各页面的内边距 */
+.page-container {
+  padding: 20px;
+}
+
+/** 卡片间距 */
+.card-gap {
+  margin-bottom: 20px;
+}
+
+/** 文字辅助色（次要信息） */
+.text-secondary {
+  color: #909399;
+}
+
+.text-muted {
+  color: #c0c4cc;
+}
+
+/** 单行省略：用于卡片标题 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/** 两行省略：用于视频标题（保留更多信息） */
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/** 数值强调（榜单里的播放量等） */
+.text-strong {
+  font-weight: 600;
+  color: #303133;
+}
+
+/** 图表容器：给 ECharts 一个明确高度，否则高度为 0 不显示 */
+.chart-container {
+  width: 100%;
+  height: 320px;
+}
+
+.chart-container--tall {
+  height: 420px;
+}
+
+/* ---------------------------------------------------------------------------
+   4. Element Plus 微调
+   --------------------------------------------------------------------------- */
+/* 卡片标题统一样式，避免每个页面重复写 */
+.el-card__header {
+  font-weight: 600;
+}
+
+/* 表格内的数字右对齐更易比较 */
+.el-table .cell-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 侧边栏菜单去掉默认右边框（由布局自己控制） */
+.el-menu {
+  border-right: none;
+}
+
+/* ---------------------------------------------------------------------------
+   5. 页面切换动画
+   --------------------------------------------------------------------------- */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+}

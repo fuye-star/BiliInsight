@@ -1,0 +1,84 @@
+# ============================================================
+# BiliInsight 后端依赖清单
+# 目标环境：Windows 11 / Python 3.11 - 3.13
+# 安装：pip install -r requirements.txt
+#
+# 版本策略：
+#   ==  用于已验证、且版本敏感的核心包
+#   >=x,<y  用于需跟随上游兼容的包（避免与 langchain 1.x 生态冲突）
+# 所有版本均已实测在 PyPI / Windows / cp313 上可解析
+# ============================================================
+
+# ---------- Web 框架 ----------
+Django==5.2.7
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+django-filter==25.1
+drf-spectacular==0.28.0
+
+# ---------- 数据库驱动 ----------
+PyMySQL==1.1.1
+# 若已具备 C 编译环境，可改用（性能更好）：
+# mysqlclient==2.2.7
+
+# ---------- 缓存 / 异步任务 ----------
+redis>=5.0,<7.0
+celery==5.5.3
+django-celery-beat==2.8.1
+django-celery-results==2.6.0
+
+# ---------- 数据清洗与挖掘 ----------
+pandas>=2.2,<3.0
+numpy>=1.26,<3.0
+scikit-learn==1.7.1
+jieba==0.42.1
+wordcloud==1.9.4
+
+# ---------- 爬虫 ----------
+requests>=2.32,<3.0
+httpx==0.28.1
+beautifulsoup4>=4.12,<5.0
+lxml>=5.0
+tenacity>=9.0
+# Windows 无 C 编译环境时的兜底解析器（lxml 失败时使用）
+html5lib==1.1
+
+# ---------- AI：情感分析（国产框架 飞桨）----------
+# ⚠️ 重要：paddlenlp 在 Python 3.13 上【装不上】
+#    原因：paddlenlp 2.8.1 依赖 tool-helpers，该包在 PyPI 上取不到
+#          （版本约束均为 >=3.x,<3.13）。这是上游问题，非环境问题。
+#
+# 因此本项目把情感分析设计为【可插拔】，两种实现：
+#
+#   A. 默认实现 —— SnowNLP（纯 Python，零编译，支持 3.13）
+#      已在本清单下方启用，开箱即用。
+#
+#   B. 进阶实现 —— PaddleNLP（需 Python 3.11/3.12）
+#      若要启用，见 requirements-paddle.txt 与 README 7.5 说明。
+#
+# 弹幕情感分析的业务逻辑（情绪分类、波动图、词云）与具体库无关，
+# 走 apps/ai/sentiment.py 里的 SentimentAnalyzer 抽象接口，
+# 换实现只需改一个环境变量 SENTIMENT_BACKEND。
+snownlp==0.12.3
+
+# 若已升级到 Python 3.11/3.12，可改用下面两行替代 snownlp：
+# paddlepaddle==3.3.1
+# paddlenlp==2.8.1
+
+# ---------- AI：LLM 编排与向量库 ----------
+langchain>=1.0,<2.0
+langchain-community>=0.4,<0.5
+dashscope>=1.20
+chromadb>=1.0,<2.0
+
+# ---------- 生产 WSGI（Windows 无 gunicorn，用 waitress）----------
+waitress==3.0.2
+
+# ---------- 环境变量 ----------
+python-dotenv>=1.0
+
+# ---------- 测试与压测 ----------
+pytest>=8.0
+pytest-django>=4.8
+locust>=2.30

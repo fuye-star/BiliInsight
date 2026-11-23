@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      禁用 Referer：B站图床（i0/i1/i2.hdslb.com）会校验来源，
+      带着 http://localhost:8080/ 去请求会返回 403，导致封面全部裂图。
+      实测：无 Referer -> 200，带本地 Referer -> 403。
+      这一行让所有 <img> 都不发送 Referer，封面与头像才能正常显示。
+      只影响跨域图片请求，不影响同源的 /api 调用。
+    -->
+    <meta name="referrer" content="no-referrer" />
+    <title>BiliInsight · B站热门视频数据分析</title>
+    <meta
+      name="description"
+      content="B站热门视频数据分析与智能推荐系统 —— 数据采集、清洗挖掘、可视化与 AI 推荐"
+    />
+    <style>
+      /* 首屏加载时的骨架样式，避免白屏闪烁 */
+      #app-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f5f7fa;
+        color: #909399;
+        font-family: system-ui, -apple-system, 'Microsoft YaHei', sans-serif;
+      }
+      #app-loading .spinner {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 16px;
+        border: 3px solid #dcdfe6;
+        border-top-color: #409eff;
+        border-radius: 50%;
+        animation: app-spin 0.8s linear infinite;
+      }
+      @keyframes app-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Vue 挂载后会替换这里的内容 -->
+      <div id="app-loading">
+        <div class="spinner"></div>
+        <div>BiliInsight 正在加载…</div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

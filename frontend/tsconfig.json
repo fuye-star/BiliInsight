@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": false,
+    // 【为什么需要 "node"】
+    //   vite.config.ts 里用到了 node:url 与 import.meta.url，
+    //   这些是 Node 内置模块，不属于 DOM lib。
+    //   原先 types 只有 "vite/client"，`npm run build`（含 vue-tsc）会报
+    //     error TS2307: Cannot find module 'node:url'
+    //   Vite 开发服务器不做类型检查，所以开发阶段完全发现不了。
+    "types": ["vite/client", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "vite.config.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

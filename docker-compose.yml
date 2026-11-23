@@ -1,0 +1,80 @@
+# ============================================================
+# BiliInsight 中间件编排：MySQL 8.0 + Redis 7
+# 用法：
+#   docker compose up -d        启动
+#   docker compose ps           查看状态
+#   docker compose logs -f      查看日志
+#   docker compose down         停止（保留数据）
+#   docker compose down -v      停止并删除数据卷
+#
+# 前置条件：需安装 Docker Desktop
+#   下载：https://www.docker.com/products/docker-desktop/
+#   winget install Docker.DockerDesktop
+# ============================================================
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: biliinsight-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass_2026
+      MYSQL_DATABASE: biliinsight
+      MYSQL_USER: bili
+      MYSQL_PASSWORD: bili_pass_2026
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=500
+    ports:
+      # 宿主机映射为 3307，避免与本机已安装的原生 MySQL(3306) 冲突。
+      # 若本机没有原生 MySQL，可改回 "3306:3306"，同时把 .env 的 MYSQL_PORT 改为 3306。
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ubili", "-pbili_pass_2026"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - biliinsight-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: biliinsight-redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - biliinsight-net
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  biliinsight-net:
+    driver: bridge

@@ -1,0 +1,19 @@
+# ============================================================
+# BiliInsight 可选依赖：PaddleNLP 情感分析（进阶实现）
+#
+# ⚠️ 使用条件：Python 3.11 或 3.12
+#    在 Python 3.13 上【无法安装】—— paddlenlp 依赖的 tool-helpers
+#    在 PyPI 上取不到任何可用版本。
+#
+# 安装方式（先装 Python 3.11/3.12，再建虚拟环境）：
+#   py -3.12 -m venv .venv-paddle
+#   .\.venv-paddle\Scripts\Activate.ps1
+#   pip install -r requirements.txt
+#   pip install -r requirements-paddle.txt -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+#
+# 启用后，在 .env 中设置：
+#   SENTIMENT_BACKEND=paddlenlp
+# ============================================================
+
+paddlepaddle==3.3.1
+paddlenlp==2.8.1
